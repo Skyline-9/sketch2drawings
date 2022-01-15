@@ -90,7 +90,7 @@ python preprocessing/process.py --input_dir images/original --operation resize -
 This operation took me about 25 minutes to run. When finished, we should see a folder called resize with 256 x 256 images
 
 ### Detect Edges Using Canny
-We used Canny to detect edges. Navigate to the folder with process in it and then run process.py
+We used Canny to detect edges. Navigate to the folder with process in it and then run process.py. This cd is important because it's used to figure out where the image folder is located.
 
 ```bash
 cd preprocessing
