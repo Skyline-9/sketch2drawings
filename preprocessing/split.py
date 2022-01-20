@@ -19,8 +19,8 @@ a = parser.parse_args()
 def main():
     random.seed(0)
 
-    files = glob.glob(os.path.join(pathlib.Path(__file__).resolve().parent.parent.joinpath('images', 'edges'), "*.png"))
-    print(pathlib.Path(__file__).resolve().parent.parent.joinpath('images', 'edges'))
+    files = glob.glob(os.path.join(a.dir, "*.png"))
+    print(files)
     files.sort()
 
     assignments = []
