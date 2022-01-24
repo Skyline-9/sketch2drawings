@@ -30,8 +30,8 @@ Using Conditional Generative Adversial Networks (cGANs), Sketch2drawings perform
 ---
 
 ## Samples
-![](img/example7.png)
-![](img/example1.png)
+![](sample-img/example7.png)
+![](sample-img/example1.png)
 
 *Left is input, center is output, and right is target*
 
