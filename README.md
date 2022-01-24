@@ -137,3 +137,8 @@ python pix2pix.py --mode test --output_dir s2d_test --input_dir images/combined/
 ```
 
 Results shouldbe in a new folder called `s2d_test`
+
+### Export Mode
+```bash
+python pix2pix.py --mode export --output_dir export/ --checkpoint s2d_train/ --which_direction BtoA
+```
