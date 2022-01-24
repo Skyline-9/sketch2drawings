@@ -31,8 +31,7 @@ Using Conditional Generative Adversial Networks (cGANs), Sketch2drawings perform
 
 ## Samples
 ![](sample-img/example7.png)
-![](sample-img/example1.png)
-
+![](sample-img/example11.png)
 *Left is input, center is output, and right is target*
 
 ## How to train Sketch2Drawings??
