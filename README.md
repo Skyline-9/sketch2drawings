@@ -130,3 +130,10 @@ python dockrun.py python pix2pix.py \
       --input_dir images/combined/train \
       --which_direction BtoA
 ```
+
+### Testing
+```bash
+python pix2pix.py --mode test --output_dir s2d_test --input_dir images/combined/val --checkpoint s2d_train
+```
+
+Results shouldbe in a new folder called `s2d_test`
