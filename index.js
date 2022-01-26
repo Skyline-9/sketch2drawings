@@ -2,7 +2,7 @@ const SIZE = 256, sampleNum = 7;
 let inputCanvas, outputContainer, statusMsg, transferBtn, sampleIndex = 0, modelReady = false, isTransfering = false;
 const inputImgs = [], outputImgs = [];
 
-const edges2pikachu = pix2pix('./models/s2d', modelLoaded);
+const edges2pikachu = pix2pix('./models/s2d.pict', modelLoaded);
 
 function setup() {
   // Create canvas
