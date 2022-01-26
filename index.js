@@ -1,4 +1,4 @@
-const SIZE = 256, sampleNum = 7;
+const SIZE = 256, sampleNum = 8;
 let inputCanvas, outputContainer, statusMsg, transferBtn, sampleIndex = 0, modelReady = false, isTransfering = false;
 const inputImgs = [], outputImgs = [];
 
