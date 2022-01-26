@@ -1,155 +1,185 @@
-# pix2pix in tensorflow.js
-See a live demo here: [https://yining1023.github.io/pix2pix_tensorflowjs_lite/](https://yining1023.github.io/pix2pix_tensorflowjs_lite/)
+# Sketch2Drawings
 
-<a href="https://ibb.co/e0oUUd"><img src="images/demo.gif" alt="demo"></a>
+Using Conditional Generative Adversial Networks (cGANs), Sketch2drawings performs paired image-to-image translation on sketches and drawings. This deep learning mapping allows the project to turn a black and white sketch into a colorized drawing.
 
-Try it yourself: Download/clone the repository and run it locally:
-```
-$ git clone https://github.com/yining1023/pix2pix_tensorflowjs_lite.git
-$ cd pix2pix_tensorflowjs_lite
-$ python -m SimpleHTTPServer
-```
+![](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![](https://img.shields.io/badge/TensorFlow-%23FF6F00.svg?style=for-the-badge&logo=TensorFlow&logoColor=white)
+![](https://img.shields.io/badge/opencv-%23white.svg?style=for-the-badge&logo=opencv&logoColor=white)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+![Magic](https://img.shields.io/badge/Made%20with-Magic-orange?style=for-the-badge&logo=data:image/svg%2bxml;base64,PHN2ZyBpZD0iQ2FwYV8xIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA1MTIgNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIHdpZHRoPSI1MTIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGc+PHBhdGggZD0ibTM5NS44MiAxODIuNjE2LTE4OC43MiAxODguNzItMTIuOTEgMS43Mi05LjM1IDIwLjU0LTM0LjMxIDM0LjMxLTExLjAxLS43My0xMS4yNSAyMi45OS01Ni40OCA1Ni40OGMtMi45MyAyLjkzLTYuNzcgNC4zOS0xMC42MSA0LjM5cy03LjY4LTEuNDYtMTAuNjEtNC4zOWwtMjIuNjItMjIuNjJoLS4wMWwtMjIuNjItMjIuNjNjLTUuODYtNS44Ni01Ljg2LTE1LjM2IDAtMjEuMjJsNzcuNjMtNzcuNjMgMTYuNi03LjAzIDUuNjYtMTUuMjMgMzQuMzEtMzQuMzEgMTQuODQtNC45MiA3LjQyLTE3LjM0IDE2Ny41Ny0xNjcuNTcgMzMuMjQgMzMuMjR6IiBmaWxsPSIjZjY2Ii8+PHBhdGggZD0ibTM5NS44MiAxMTYuMTQ2djY2LjQ3bC0xODguNzIgMTg4LjcyLTEyLjkxIDEuNzItOS4zNSAyMC41NC0zNC4zMSAzNC4zMS0xMS4wMS0uNzMtMTEuMjUgMjIuOTktNTYuNDggNTYuNDhjLTIuOTMgMi45My02Ljc3IDQuMzktMTAuNjEgNC4zOXMtNy42OC0xLjQ2LTEwLjYxLTQuMzlsLTIyLjYyLTIyLjYyIDMzNC42NC0zMzQuNjR6IiBmaWxsPSIjZTYyZTZiIi8+PHBhdGggZD0ibTUwNi42MSAyMDkuMDA2LTY5LjE0LTY5LjEzIDQzLjA1LTg4LjM4YzIuOC01Ljc1IDEuNjUtMTIuNjUtMi44OC0xNy4xNy00LjUyLTQuNTMtMTEuNDItNS42OC0xNy4xNy0yLjg4bC04OC4zOCA0My4wNS02OS4xMy02OS4xNGMtNC4zNS00LjM1LTEwLjkyLTUuNi0xNi41Ni0zLjE2LTUuNjUgMi40NS05LjIzIDguMDktOS4wNCAxNC4yNGwyLjg2IDkwLjQ1LTg1LjM3IDU3LjgzYy00LjkxIDMuMzItNy40IDkuMjItNi4zNiAxNS4wNCAxLjA0IDUuODMgNS40IDEwLjUxIDExLjE1IDExLjk0bDk2LjYyIDI0LjAxIDI0LjAxIDk2LjYyYzEuNDMgNS43NSA2LjExIDEwLjExIDExLjk0IDExLjE1Ljg3LjE2IDEuNzUuMjMgMi42Mi4yMyA0LjkyIDAgOS42LTIuNDIgMTIuNDItNi41OWw1Ny44My04NS4zNyA5MC40NSAyLjg2YzYuMTQuMTkgMTEuNzktMy4zOSAxNC4yNC05LjA0IDIuNDQtNS42NCAxLjE5LTEyLjIxLTMuMTYtMTYuNTZ6IiBmaWxsPSIjZmFiZTJjIi8+PHBhdGggZD0ibTI5Ni4yNiAyMTUuNzA2IDI0LjAxIDk2LjYyYzEuNDMgNS43NSA2LjExIDEwLjExIDExLjk0IDExLjE1Ljg3LjE2IDEuNzUuMjMgMi42Mi4yMyA0LjkyIDAgOS42LTIuNDIgMTIuNDItNi41OWw1Ny44My04NS4zNyA5MC40NSAyLjg2YzYuMTQuMTkgMTEuNzktMy4zOSAxNC4yNC05LjA0IDIuNDQtNS42NCAxLjE5LTEyLjIxLTMuMTYtMTYuNTZsLTY5LjE0LTY5LjEzIDQzLjA1LTg4LjM4YzIuOC01Ljc1IDEuNjUtMTIuNjUtMi44OC0xNy4xN3oiIGZpbGw9IiNmZDkwMjUiLz48cGF0aCBkPSJtNDY1IDQxNi45NjZjLTI1LjkyIDAtNDcgMjEuMDgtNDcgNDdzMjEuMDggNDcgNDcgNDcgNDctMjEuMDggNDctNDctMjEuMDgtNDctNDctNDd6IiBmaWxsPSIjZmFiZTJjIi8+PHBhdGggZD0ibTEwNCAyOC45NjZoLTEzdi0xM2MwLTguMjg0LTYuNzE2LTE1LTE1LTE1cy0xNSA2LjcxNi0xNSAxNXYxM2gtMTNjLTguMjg0IDAtMTUgNi43MTYtMTUgMTVzNi43MTYgMTUgMTUgMTVoMTN2MTNjMCA4LjI4NCA2LjcxNiAxNSAxNSAxNXMxNS02LjcxNiAxNS0xNXYtMTNoMTNjOC4yODQgMCAxNS02LjcxNiAxNS0xNXMtNi43MTYtMTUtMTUtMTV6IiBmaWxsPSIjZmVkODQzIi8+PHBhdGggZD0ibTIwNy4xIDM3MS4zMzYtMjIuMjYgMjIuMjYtNDUuMzItODcuNjIgMjIuMjYtMjIuMjZ6IiBmaWxsPSIjZmVkODQzIi8+PHBhdGggZD0ibTE4NC44NCAzOTMuNTk2IDIyLjI2LTIyLjI2LTIyLjY2LTQzLjgxLTIyLjI2NSAyMi4yNjV6IiBmaWxsPSIjZmFiZTJjIi8+PHBhdGggZD0ibTE1MC41MyA0MjcuOTA2LTIyLjI2IDIyLjI2LTQ1LjMyLTg3LjYyIDIyLjI2LTIyLjI2eiIgZmlsbD0iI2ZlZDg0MyIvPjxwYXRoIGQ9Im0xMjguMjcgNDUwLjE2NiAyMi4yNi0yMi4yNi0yMi42NTUtNDMuODE1LTIyLjI2IDIyLjI2eiIgZmlsbD0iI2ZhYmUyYyIvPjxjaXJjbGUgY3g9IjE1IiBjeT0iMTE5Ljk2OSIgZmlsbD0iIzVlZDhkMyIgcj0iMTUiLz48Y2lyY2xlIGN4PSIxMjgiIGN5PSIxOTkuOTY5IiBmaWxsPSIjZDU5OWVkIiByPSIxNSIvPjxjaXJjbGUgY3g9IjE5MiIgY3k9IjYzLjk2NCIgZmlsbD0iI2Y2NiIgcj0iMTUiLz48Y2lyY2xlIGN4PSIzMjgiIGN5PSI0MTUuOTY3IiBmaWxsPSIjMzFiZWJlIiByPSIxNSIvPjxjaXJjbGUgY3g9IjQ0MCIgY3k9IjMyNy45NjciIGZpbGw9IiNhZDc3ZTMiIHI9IjE0Ljk5OSIvPjwvZz48L3N2Zz4=)
 
+<details>
+      <summary>Table of Contents</summary>
+      
+- [Sketch2Drawings](#sketch2drawings)
+  - [Samples](#samples)
+  - [How to train Sketch2Drawings??](#how-to-train-sketch2drawings)
+      - [Big Overview Steps](#big-overview-steps)
+    - [After Downloading Data](#after-downloading-data)
+    - [Install dependencies](#install-dependencies)
+    - [Resizing Operation](#resizing-operation)
+    - [Detect Edges Using Canny](#detect-edges-using-canny)
+    - [Combine Operation](#combine-operation)
+    - [Split Operation](#split-operation)
+    - [Training](#training)
+    - [Testing](#testing)
+    - [Export Mode](#export-mode)
+    - [Port model to Tensorflow.js](#port-model-to-tensorflowjs)
+</details>
 
+---
 
-## Credits: This project is based on [affinelayer](https://github.com/affinelayer)'s [pix2pix-tensorflow](https://github.com/affinelayer/pix2pix-tensorflow). I want to thank [christopherhesse](https://github.com/christopherhesse), [nsthorat](https://github.com/nsthorat), and [dsmilkov](dsmilkov) for their help and suggestions from this Github [issue](https://github.com/tensorflow/tfjs/issues/79).
+## Samples
+![](sample-img/example7.png)
+![](sample-img/example11.png)
+*Left is input, center is output, and right is target*
 
+## How to train Sketch2Drawings??
 
+#### Big Overview Steps
 
-## How to train a pix2pix(edges2xxx) model from scratch
-- 1. Prepare the data
-- 2. Train the model
-- 3. Test the model
-- 4. Export the model
-- 5. Port the model to tensorflow.js
-- 6. Create an interactive interface in the browser
+1. Download data from [this kaggle dataset](https://www.kaggle.com/shanmukh05/anime-names-and-image-generation)
+2. Prepare/Preprocess the data
+3. Train the model
+4. Test the model
+5. Export the model??
 
+<hr>
 
+### After Downloading Data
 
-### 1. Prepare the data
-
-- 1.1 Scrape images from google search
-- 1.2 Remove the background of the images
-- 1.3 Resize all images into 256x256 px
-- 1.4 Detect edges of all images
-- 1.5 Combine input images and target images
-- 1.6 Split all combined images into two folders: `train` and `val`
-
-Before we start, check out [affinelayer](https://github.com/affinelayer)'s [Create your own dataset](https://github.com/affinelayer/pix2pix-tensorflow#creating-your-own-dataset). I followed his instrustion for steps 1.3, 1.5 and 1.6.
-
-
-#### 1.1 Scrape images from google search / Flickr
-We can create our own target images. But for this edge2pikachu project, I downloaded a lot of images from google.
-
-I used this [google_image_downloader](https://github.com/atif93/google_image_downloader) to download images from google. But it requires too much setup, if you manage setup google_image_downloader, you can run -
-```
-$ python image_download.py <query> <number of images>
-```
-It will download images and save it to the current directory.
-
-I recommand the two methods below to get images -
-- You can try this library to get images from Flickr: https://github.com/antiboredom/flickr-scrape. You can get an API key for Flickr in a few minutes: https://www.flickr.com/services/api/misc.api_keys.html
-- Here is a chrome extension can batch download images on a web page: [Fatkun Batch Download Image](https://chrome.google.com/webstore/detail/fatkun-batch-download-ima/nnjjahlikiabnchcpehcpkdeckfgnohf?hl=en)
-
-#### 1.2 Remove the background of the images
-Some images have some background. I'm using [grabcut](https://docs.opencv.org/trunk/d8/d83/tutorial_py_grabcut.html) with OpenCV to remove background
-Check out the script here: [https://github.com/yining1023/pix2pix-tensorflow/blob/master/tools/grabcut.py](https://github.com/yining1023/pix2pix-tensorflow/blob/master/tools/grabcut.py)
-To run the script-
-```
-$ python grabcut.py <filename>
-```
-It will open an interactive interface, here are some instructions: [https://github.com/symao/InteractiveImageSegmentation](https://github.com/symao/InteractiveImageSegmentation)
-Here's an example of removing background using grabcut:
-
-<a href="https://ibb.co/iRp9LH"><img src="https://preview.ibb.co/du2kuc/Screen_Shot_2018_03_13_at_7_03_28_AM.png" alt="Screen Shot 2018 03 13 at 7 03 28 AM" border="0" with="500px"/></a>
-
-
-#### 1.3 Resize all images into 256x256 px
-Download [pix2pix-tensorflow](https://github.com/affinelayer/pix2pix-tensorflow) repo.
-Put all images we got into `photos/original` folder
-Run - 
-```
-$ python tools/process.py --input_dir photos/original --operation resize --output_dir photos/resized
-```
-We should be able to see a new folder called `resized` with all resized images in it.
-
-
-#### 1.4 Detect edges of all images
-The script that I use to detect edges of images from one folder at once is here: [https://github.com/yining1023/pix2pix-tensorflow/blob/master/tools/edge-detection.py](https://github.com/yining1023/pix2pix-tensorflow/blob/master/tools/edge-detection.py), we need to change the path of the input images directory on [line 31](https://github.com/yining1023/pix2pix-tensorflow/blob/3e0d6c8613b3aa69adffe5484989bbe2c82b2c57/tools/edge-detection.py#L31), and create a new empty folder called `edges` in the same directory.
-Run - 
-```
-$ python edge-detection.py
-```
-We should be able to see edged-detected images in the `edges` folder.
-Here's an example of edge detection: left(original) right(edge detected)
-
-<a href="https://imgbb.com/"><img src="https://image.ibb.co/eBDGZc/0_batch2.png" alt="0_batch2" border="0" with="300px"></a>
-<a href="https://imgbb.com/"><img src="https://image.ibb.co/hW410H/0_batch2_2.png" alt="0_batch2_2" border="0" with="300px"></a>
-
-
-#### 1.5 Combine input images and target images
-```
-python tools/process.py --input_dir photos/resized --b_dir photos/blank --operation combine --output_dir photos/combined
-```
-
-Here is an example of the combined image: 
-Notice that the size of the combined image is 512x256px. The size is important for training the model successfully.
-
-<a href="https://imgbb.com/"><img src="https://image.ibb.co/kYHVvH/0_batch2.png" alt="0_batch2" border="0" with="300px"></a>
-
-Read more here: [affinelayer](https://github.com/affinelayer)'s [Create your own dataset](https://github.com/affinelayer/pix2pix-tensorflow#creating-your-own-dataset)
-
-
-#### 1.6 Split all combined images into two folders: `train` and `val`
-```
-python tools/split.py --dir photos/combined
-```
-Read more here: [affinelayer](https://github.com/affinelayer)'s [Create your own dataset](https://github.com/affinelayer/pix2pix-tensorflow#creating-your-own-dataset)
-
-I collected 305 images for training and 78 images for testing.
-
-
-### 2. Train the model
-```
-# train the model
-python pix2pix.py --mode train --output_dir pikachu_train --max_epochs 200 --input_dir pikachu/train --which_direction BtoA --ngf 32 --ndf 32
-```
-I used `--ngf 32 --ndf 32` here, and the model is much smaller and faster than using the default value which is 64.
-Read more here: [https://github.com/affinelayer/pix2pix-tensorflow#getting-started](https://github.com/affinelayer/pix2pix-tensorflow#getting-started)
-
-I used the High Power Computer(HPC) at NYU to train the model. You can see more instruction here: [https://github.com/cvalenzuela/hpc](https://github.com/cvalenzuela/hpc). You can request GPU and submit a job to HPC, and use tunnels to tranfer large files between the HPC and your computer.
-
-The training takes me 4 hours and 16 mins. After train, there should be a `pikachu_train` folder with `checkpoint` in it.
-
-
-### 3. Test the model
-```
-# test the model
-python pix2pix.py --mode test --output_dir pikachu_test --input_dir pikachu/val --checkpoint pikachu_train
-```
-After testing, there should be a new folder called `pikachu_test`. In the folder, if you open the `index.html`, you should be able to see something like this in your browser:
-
-<a href="https://ibb.co/cJiLvH"><img src="https://preview.ibb.co/kkFB2x/Screen_Shot_2018_03_15_at_8_42_48_AM.png" alt="Screen_Shot_2018_03_15_at_8_42_48_AM" border="0" width="400px"></a><br />
-
-Read more here: [https://github.com/affinelayer/pix2pix-tensorflow#getting-started](https://github.com/affinelayer/pix2pix-tensorflow#getting-started)
-
-
-### 4. Export the model
-```
-python pix2pix.py --mode export --output_dir /export/ --checkpoint /pikachu_train/ --which_direction BtoA
-```
-It will create a new `export` folder
-
-### 5. Port the model to tensorflow.js
-I followed [affinelayer](https://github.com/affinelayer)'s instruction here: [https://github.com/affinelayer/pix2pix-tensorflow/tree/master/server#exporting](https://github.com/affinelayer/pix2pix-tensorflow/tree/master/server#exporting)
+Create a folder called original and edges under images so that the directory looks like this
 
 ```
-cd server
-python tools/export-checkpoint.py --checkpoint ../export --output_file static/models/pikachu_BtoA.pict
+.
+├── README.md
+├── docker
+│        └── Dockerfile
+├── images
+│        └── original
+│        └── edges
+│        └── resized
+│        └── combined
 ```
-We should be able to get a file named `pikachu_BtoA.pict`, which is 13.6 MB.
 
+Move the images (only, no folders) to images/original
 
-### 6. Create an interactive interface in the browser
-Copy the model we get from step 5 to the `models` folder.
+We will
 
+1. Resize all images into 256 x 256
+2. Detect edges to get the "sketch"
+3. Combine input images and target images
+4. Split combined images into train and val set
+
+### Install dependencies
+
+Install all the dependencies
+
+```bash
+pip3 install -r requirements.txt
+```
+
+Warning: Python version must be at max 3.6! I spent too much time trying to do with Python 3.8 `D:`
+
+If you have conda installed, you can also try this
+
+1. Create virtual environment named sketch2drawings
+
+```bash
+conda create -n "sketch2drawings" python=3.6.0
+```
+
+2. Activate conda environment
+
+```bash
+conda activate sketch2drawings
+```
+
+3. Install OpenCV and Tensorflow v1.4.1 (since numpy is already installed)
+
+```bash
+conda install opencv-python
+pip install tensorflow==1.4.1
+```
+
+### Resizing Operation
+
+After putting all the images into the original folder, run
+
+```bash
+python preprocessing/process.py --input_dir images/original --operation resize --output_dir images/resized
+```
+
+This operation took me about 25 minutes to run. When finished, we should see a folder called resize with 256 x 256 images
+
+### Detect Edges Using Canny
+
+We used Canny to detect edges. Navigate to the folder with process in it and then run process.py. This cd is important because it's used to figure out where the image folder is located.
+
+```bash
+cd preprocessing
+python edge_detection.py
+```
+
+### Combine Operation
+
+Navigate back to the root directory with `cd ..`. Now run the combine operation with
+
+```bash
+python preprocessing/process.py --input_dir images/resized --b_dir images/edges --operation combine --output_dir images/combined
+```
+
+This operation took me about 30 minutes to run. The script will skip over files that already exist, so you can pause the operation and resume later.
+
+### Split Operation
+
+Generate train/validation splits
+
+```bash
+python preprocessing/split.py --dir images/combined
+```
+
+### Training
+
+Hopefully you have a GPU because if you train on CPU you will definitely be waiting for a bit.
+
+```bash
+python pix2pix.py --mode train --output_dir s2d_train --max_epochs 200 --input_dir images/combined/train --which_direction BtoA --ngf 32 --ndf 32
+```
+
+Maybe try changing `--ngf 32` and `--ndf32` to 64 to see how well it does, but it takes more computation
+
+If you have Docker installed, you can use the Docker image to train without having to install the correct version of Tensorflow
+
+```bash
+# Train the model with docker
+python dockrun.py python pix2pix.py \
+      --mode train \
+      --output_dir s2d_train \
+      --max_epochs 200 \
+      --input_dir images/combined/train \
+      --which_direction BtoA
+```
+
+### Testing
+
+```bash
+python pix2pix.py --mode test --output_dir s2d_test --input_dir images/combined/val --checkpoint s2d_train
+```
+
+Results shouldbe in a new folder called `s2d_test`
+
+### Export Mode
+
+```bash
+python pix2pix.py --mode export --output_dir export/ --checkpoint s2d_train/ --which_direction BtoA
+```
+
+After running this command, you should see a folder called `export` with `checkpoint` and various files inside it.
+
+### Port model to Tensorflow.js
+```bash
+python export_checkpoint.py --checkpoint export --output_file s2d.pict
+```
+
+This will create a file called `s2d.pict`.
