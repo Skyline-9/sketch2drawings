@@ -183,3 +183,6 @@ python export_checkpoint.py --checkpoint export --output_file s2d.pict
 ```
 
 This will create a file called `s2d.pict`.
+
+## Testing With Different Dataset
+python pix2pix.py --mode train --output_dir s2d_train --max_epochs 200 --input_dir /srv/datasets/anime-colorization-pair/train --which_direction BtoA --ngf 64 --ndf 64
