@@ -25,14 +25,19 @@ Using Conditional Generative Adversial Networks (cGANs), Sketch2drawings perform
     - [Testing](#testing)
     - [Export Mode](#export-mode)
     - [Port model to Tensorflow.js](#port-model-to-tensorflowjs)
+  - [Testing With Different Dataset](#testing-with-different-dataset)
 </details>
 
 ---
 
 ## Samples
-![](sample-img/example7.png)
-![](sample-img/example11.png)
-*Left is input, center is output, and right is target*
+
+![](sample-img/old_model/example7.png)
+![](sample-img/old_model/example11.png)
+![](sample-img/new_model/example1.png)
+![](sample-img/new_model/example2.png)
+![](sample-img/new_model/example5.png)
+_Left is input, center is output, and right is target_
 
 ## How to train Sketch2Drawings??
 
@@ -178,6 +183,7 @@ python pix2pix.py --mode export --output_dir export/ --checkpoint s2d_train/ --w
 After running this command, you should see a folder called `export` with `checkpoint` and various files inside it.
 
 ### Port model to Tensorflow.js
+
 ```bash
 python3 export_checkpoint.py --checkpoint export --output_file s2d.pict
 ```
@@ -185,4 +191,5 @@ python3 export_checkpoint.py --checkpoint export --output_file s2d.pict
 This will create a file called `s2d.pict`.
 
 ## Testing With Different Dataset
+
 python pix2pix.py --mode train --output_dir s2d_train --max_epochs 200 --input_dir /srv/datasets/anime-colorization-pair/train --which_direction BtoA --ngf 64 --ndf 64
