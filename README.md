@@ -179,7 +179,7 @@ After running this command, you should see a folder called `export` with `checkp
 
 ### Port model to Tensorflow.js
 ```bash
-python export_checkpoint.py --checkpoint export --output_file s2d.pict
+python3 export_checkpoint.py --checkpoint export --output_file s2d.pict
 ```
 
 This will create a file called `s2d.pict`.
